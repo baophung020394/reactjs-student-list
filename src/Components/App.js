@@ -10,7 +10,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayForm : true
+      displayForm : true,
+      students: null
     }
    
   }
@@ -19,6 +20,19 @@ class App extends Component {
       displayForm: !this.state.displayForm
     });
   }
+  getStudent = () => {
+    fetch('http://172.16.12.30:4000/studies')
+    .then(recordset  => recordset.json())
+    .then(recordset => this.setState({studies : recordset}))
+  }
+
+  componentDidMount() {
+      this.getStudent();
+    // fetch('http://172.16.12.30:4000/studies')
+    // .then(recordset  => recordset.json())
+    // .then(recordset => this.setState({studies : recordset}))
+  }
+
   render() {
     return (
       <div>
@@ -27,7 +41,7 @@ class App extends Component {
             <div className="container">
               <div className="row">
                 <Search con={() => this.changeStateForm()} displayForm={this.state.displayForm}/>
-                <TableData />
+                <TableData students={this.state.studies}/>
                 <AddUser displayForm={this.state.displayForm}  />
               </div>
             </div>

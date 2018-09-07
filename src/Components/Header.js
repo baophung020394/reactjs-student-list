@@ -7,7 +7,7 @@ class Header extends Component {
                 <div className="container text-center">
                 <h1 className="display-3">Quản lý thành viên bằng Reactjs</h1>
                 <p className="lead">
-                    với dữ liệu json
+                    với dữ liệu SQL Server
                 </p>
                 </div>
             </div>

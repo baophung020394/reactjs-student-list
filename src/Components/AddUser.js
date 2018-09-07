@@ -34,7 +34,7 @@ class AddUser extends Component {
         }
     }
     render() {
-        console.log(this.props.displayForm);
+        // console.log(this.props.displayForm);
         return (
             <div className="col-3">
                 <div className="text-center">
