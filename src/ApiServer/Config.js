@@ -54,19 +54,21 @@ app.get('/studies', function (req, res, next) {
     });
 });
 
+/**
+ * Insert New User
+ */
 app.post('/adduser', function (req, res, next) {
     var userName = req.body.userName;
-    var userNotify = req.body;
     sql.connect(config, function (err) {
         try{
-            if (err) console.log(err);
+            if (err) throw err;
 
             // create Request object
             var request = new sql.Request();            
             request.input("Name", sql.NVarChar, userName);
             // query to the database and get the records
-            request.execute("InsertStudent").then(function (recordset) {
-                console.log(recordset);
+            request.execute("InsertNewStudent").then(function (recordset) {
+                // console.log(recordset);
                 res.send(recordset)
                 sql.close();
             });
@@ -77,6 +79,55 @@ app.post('/adduser', function (req, res, next) {
     });
 });
 
+/**
+ * Delete User
+ */
+app.post('/deleteuser', function (req, res, next){
+    var userId = req.body.userId;
+    // console.log(req);
+    sql.connect(config, function(err) {
+        try{
+            if(err) throw err;
+
+            var request = new sql.Request();
+            request.input("Id", sql.Int, userId);
+            request.execute("DeleteUser").then(function (recordset) {
+                res.send(recordset)
+                sql.close();
+            });
+        }catch(err){
+            sql.close();
+        }
+        
+    })
+});
+/**
+ * Edit Student
+ */
+app.post('/edituser', function (req, res, next){
+    var userId = req.body.userId;
+    var userName = req.body.userName;
+    var rowVersion = req.body.rowVersion;
+    console.log(rowVersion);
+    console.log(rowVersion);
+    console.log(rowVersion);
+    sql.connect(config, function(err) {
+        try{
+            if(err) throw err;
+
+            var request = new sql.Request();
+            request.input("Id", sql.Int, userId);
+            request.input("Name", sql.NVarChar, userName);
+            request.input("RowVersion", sql.timestamp, rowVersion)
+            request.execute("UpdateStudent").then(function (recordset) {
+                res.send(recordset)
+                sql.close();
+            });
+        }catch(err){
+            sql.close();
+        }
+    })
+});
 var server = app.listen(4000, function () {
     console.log('Server is running..');
 });

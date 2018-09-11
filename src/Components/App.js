@@ -12,7 +12,8 @@ class App extends Component {
     this.state = {
       displayForm : true,
       student : '',
-      userObj : ''
+      userObj : '',
+      userEditObject : {}
     }
    
   }
@@ -34,9 +35,10 @@ class App extends Component {
   }
 
   /**
-   * Function New User
+   * Function Insert New User
    */
   createNewUser = async (userInformation) => {
+
     await fetch('http://172.16.12.30:4000/adduser', {
       method: 'POST',
       headers: {
@@ -50,28 +52,98 @@ class App extends Component {
     .then(recordset  => recordset.json())
     .then(recordset => this.setState({userObj : recordset}))
     // console.log(this.state.userObj.recordset[0]);
-    if(this.state.userObj.recordset[0]['Message'] === "Insert Success") {
+    if(this.state.userObj.recordset[0]['Message'] === "Insert student success") {
       this.getStudent();
     }else {
       alert (this.state.userObj.recordset[0]['Message']);
     }
   }
+  /**
+   * Function Delete User
+   */
+  deleteUser = async (userId) => {
+    // console.log(userId);
+    await fetch('http://172.16.12.30:4000/deleteuser', {
+      method: 'POST',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'userId': userId
+      })
+    }) 
+    .then(recordset  => recordset.json())
+    .then(recordset => this.setState({userObj : recordset}))
 
+    if(this.state.userObj.recordset[0]['Message'] === "Delete student success") {
+      this.getStudent();
+    }else {
+      alert (this.state.userObj.recordset[0]['Message']);
+    }
+    
+  }
+
+  /**
+   * Function Edit User
+   */
+  editUser = (userInfo) => {
+    this.setState({
+        userEditObject : userInfo
+    });
+    console.log(userInfo);
+  }
+  submitUpdateUser = async (userInfo) => {
+    if(userInfo !== null) {
+      await fetch('http://172.16.12.30:4000/edituser', {
+        method: 'POST',
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'userId' : (userInfo.id !== undefined ? userInfo.id : 0 ),
+          'userName' : userInfo.name,
+          'rowVersion' : userInfo.rowVersion
+        })
+      }) 
+      .then(recordset  => recordset.json())
+      .then(recordset => this.setState({userEditObject : recordset}))
+      if(this.state.userEditObject.recordset[0]['Message'] === "Update student success") {
+        this.getStudent();
+      }else {
+        alert (this.state.userEditObject.recordset[0]['Message']);
+      }
+    } else {
+      alert ('Id invalid');
+    }
+    
+  }
   componentDidMount() {
       this.getStudent();
   }
 
   render() {
+   
     return (
       <div>
          <Header />
          <div className="searchForm">
             <div className="container">
               <div className="row">
-                <Search con={() => this.changeStateForm()} displayForm={this.state.displayForm}/>
-                <TableData students={this.state.studies}/>
+                <Search 
+                  submitUpdateUser = {(userInfo) => this.submitUpdateUser(userInfo)}
+                  editUser = {(userInfo) => this.editUser(userInfo)}
+                  userEditObject = {() => this.state.userEditObject}
+                  con={() => this.changeStateForm()} 
+                  displayForm={this.state.displayForm}/>
+                <TableData 
+                  editUser = {(userInfo) => this.editUser(userInfo)}
+                  students={this.state.studies}
+                  deleteUser={(userInformation) => this.deleteUser(userInformation)}
+                />
                 <AddUser displayForm={this.state.displayForm}  
-                  createNewUser = {(userInformation) => {this.createNewUser(userInformation)}}
+                  createNewUser = {(userId) => {this.createNewUser(userId)}}
                 />
               </div>
             </div>

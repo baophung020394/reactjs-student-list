@@ -23,39 +23,40 @@ class AddUser extends Component {
     checkStateForm = () => {
         if(this.props.displayForm === true) {
             return (
-                <div className="card border-primary mb-3" style={{maxWidth: '18rem'}}>
-                    <div className="card-header">New User</div>
-                    <div className="card-body text-primary">
-                    <div className="form-group">
-                        <input name="name" type="text" className="form-control"  placeholder="User name" 
-                            onChange={(e) => this.isChange(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <input name="tel" type="text" className="form-control"  placeholder="Phone" 
-                            onChange={(e) => this.isChange(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <select name="permission" className="custom-select" required 
-                            onChange={(e) => this.isChange(e)}
-                        >
-                        <option value>--Chọn--</option>
-                        <option value={1}>Admin</option>
-                        <option value={2}>Modrator</option>
-                        <option value={3}>Normal</option>
-                        </select>
-                        <div className="invalid-feedback">Example invalid custom select feedback</div>
-                    </div>
-                    <div className="form-group">
-                        <div className="btn btn-block btn-primary" 
-                            onClick={(userInformation) => this.props.createNewUser(this.state)}
-                        >
-                        New
+                <form method="post">
+                    <div className="card border-primary mb-3" style={{maxWidth: '18rem'}}>
+                        <div className="card-header">New User</div>
+                        <div className="card-body text-primary">
+                        <div className="form-group">
+                            <input name="name" type="text" className="form-control"  placeholder="User name" 
+                                onChange={(e) => this.isChange(e)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <input name="tel" type="text" className="form-control"  placeholder="Phone" 
+                                onChange={(e) => this.isChange(e)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <select name="permission" className="custom-select" required 
+                                onChange={(e) => this.isChange(e)}
+                            >
+                            <option value>--Chọn--</option>
+                            <option value={1}>Admin</option>
+                            <option value={2}>Modrator</option>
+                            <option value={3}>Normal</option>
+                            </select>
+                            <div className="invalid-feedback">Example invalid custom select feedback</div>
+                        </div>
+                        <div className="form-group">
+                            <input type="reset" className="btn btn-block btn-primary" value = "New"
+                                onClick={(userInformation) => this.props.createNewUser(this.state)}
+                            />
+                        
+                        </div>
                         </div>
                     </div>
-                    </div>
-                </div>
+                </form>
             )
         }
     }
