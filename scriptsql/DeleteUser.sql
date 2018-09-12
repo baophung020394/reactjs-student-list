@@ -1,7 +1,7 @@
 USE [Practise]
 GO
 
-/****** Object:  StoredProcedure [dbo].[DeleteUser]    Script Date: 9/11/2018 6:11:12 PM ******/
+/****** Object:  StoredProcedure [dbo].[DeleteUser]    Script Date: 9/12/2018 5:53:03 PM ******/
 SET ANSI_NULLS ON
 GO
 

@@ -1,7 +1,7 @@
 USE [Practise]
 GO
 
-/****** Object:  StoredProcedure [dbo].[InsertNewStudent]    Script Date: 9/11/2018 6:11:23 PM ******/
+/****** Object:  StoredProcedure [dbo].[InsertNewStudent]    Script Date: 9/12/2018 5:53:31 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -16,14 +16,17 @@ BEGIN TRY
 	BEGIN
 		SELECT 'Please input value' As 'Message' 
 	END
-	IF EXISTS(SELECT * FROM Student WHERE @Name = Name) 
+	ELSE 
 	BEGIN
-		SELECT 'Student exist' As 'Message'
-	END
-	ELSE
-	BEGIN
-		INSERT INTO Student(Name) VALUES(@Name)
-		SELECT 'Insert student success' As 'Message'
+		IF EXISTS(SELECT * FROM Student WHERE @Name = Name) 
+		BEGIN
+			SELECT 'Student exist' As 'Message'
+		END
+		ELSE
+		BEGIN
+			INSERT INTO Student(Name) VALUES(@Name)
+			SELECT 'Insert student success' As 'Message'
+		END
 	END
 END TRY
 BEGIN CATCH
