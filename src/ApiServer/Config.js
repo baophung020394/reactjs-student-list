@@ -41,10 +41,11 @@ app.get('/studies', function (req, res, next) {
 
             // create Request object
             var request = new sql.Request();
-               
             // query to the database and get the records
-            request.query('select * from Student', function (err, recordset) {
+            // request.execute("SelectAllStudents", function (err, recordset) {
+            request.query("SELECT * FROM Student", function (err, recordset) {
                 if(err) throw error;
+                // console.log(res.send(recordset));
                 res.send(recordset)
                 sql.close();
             });
@@ -107,18 +108,17 @@ app.post('/deleteuser', function (req, res, next){
 app.post('/edituser', function (req, res, next){
     var userId = req.body.userId;
     var userName = req.body.userName;
-    var rowVersion = req.body.rowVersion;
-    console.log(rowVersion);
-    console.log(rowVersion);
-    console.log(rowVersion);
+    var rowVersion = '0x' + Buffer(req.body.rowVersion.data).toString('hex');
     sql.connect(config, function(err) {
         try{
-            if(err) throw err;
-
+            if(err) {
+                console.log(err);
+                throw err;
+            }
             var request = new sql.Request();
             request.input("Id", sql.Int, userId);
             request.input("Name", sql.NVarChar, userName);
-            request.input("RowVersion", sql.timestamp, rowVersion)
+            request.input("RowVersion", sql.NVarChar, rowVersion);
             request.execute("UpdateStudent").then(function (recordset) {
                 res.send(recordset)
                 sql.close();
@@ -127,6 +127,7 @@ app.post('/edituser', function (req, res, next){
             sql.close();
         }
     })
+
 });
 var server = app.listen(4000, function () {
     console.log('Server is running..');

@@ -32,6 +32,7 @@ class App extends Component {
     fetch('http://172.16.12.30:4000/studies')
     .then(recordset  => recordset.json())
     .then(recordset => this.setState({studies : recordset}))
+   
   }
 
   /**
@@ -51,7 +52,7 @@ class App extends Component {
     }) 
     .then(recordset  => recordset.json())
     .then(recordset => this.setState({userObj : recordset}))
-    // console.log(this.state.userObj.recordset[0]);
+    userInformation.name = '';
     if(this.state.userObj.recordset[0]['Message'] === "Insert student success") {
       this.getStudent();
     }else {
@@ -124,7 +125,9 @@ class App extends Component {
   }
 
   render() {
-   
+    if(this.state.studies !== undefined){
+      // console.log(this.state.studies).recordset);
+    }
     return (
       <div>
          <Header />
@@ -142,7 +145,8 @@ class App extends Component {
                   students={this.state.studies}
                   deleteUser={(userInformation) => this.deleteUser(userInformation)}
                 />
-                <AddUser displayForm={this.state.displayForm}  
+                <AddUser 
+                  displayForm={this.state.displayForm}  
                   createNewUser = {(userId) => {this.createNewUser(userId)}}
                 />
               </div>
