@@ -32,8 +32,43 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+/**
+ * GET Params of Pagination
+ */
+// app.get('/getpagination', function (req, res, next) {
+//     // connect to your database
+//     sql.connect(config, function (err) {
+//         try{
+//             if (err) console.log(err);
 
-app.get('/studies', function (req, res, next) {
+//             // create Request object
+//             var request = new sql.Request();
+//             // query to the database and get the records
+//             request.execute("GetTotalPage").then(function (err, recordset) {
+//                 if(err) throw error;
+//                 // console.log(res.send(recordset));
+//                 res.send(recordset)
+//                 sql.close();
+//             });
+//         }catch(err){
+//             sql.close();
+//         };        
+//     });
+// });
+/**
+ * GET ALL STUDENTS
+ */
+app.post('/studies', function (req, res, next) {
+    var pageIndex = req.body.pageIndex;
+    var keyWord = req.body.KeyWord;
+    // console.log(keyWord);
+    if (pageIndex === undefined  ) {
+        pageIndex = 1;
+    }
+    if (keyWord === undefined) {
+        keyWord = '';
+    }
+    // var pageSize = req.body.pageSize;
     // connect to your database
     sql.connect(config, function (err) {
         try{
@@ -41,12 +76,14 @@ app.get('/studies', function (req, res, next) {
 
             // create Request object
             var request = new sql.Request();
+            request.input("PageIndex", sql.INT, pageIndex);
+            request.input("KeyWord", sql.NVARCHAR, keyWord);
+            request.input("PageSize", sql.INT, 5);
+            // console.log(request);
             // query to the database and get the records
-            // request.execute("SelectAllStudents", function (err, recordset) {
-            request.query("SELECT * FROM Student", function (err, recordset) {
+            request.execute("SelectAllStudents").then(function (recordset) {
                 if(err) throw error;
-                // console.log(res.send(recordset));
-                res.send(recordset)
+                res.send(recordset);
                 sql.close();
             });
         }catch(err){
@@ -67,6 +104,7 @@ app.post('/adduser', function (req, res, next) {
             // create Request object
             var request = new sql.Request();            
             request.input("Name", sql.NVarChar, userName);
+            console.log(request);
             // query to the database and get the records
             request.execute("InsertNewStudent").then(function (recordset) {
                 // console.log(recordset);
@@ -118,6 +156,7 @@ app.post('/edituser', function (req, res, next){
             var request = new sql.Request();
             request.input("Id", sql.Int, userId);
             request.input("Name", sql.NVarChar, userName);
+            console.log(userName);
             request.input("RowVersion", sql.NVarChar, rowVersion);
             request.execute("UpdateStudent").then(function (recordset) {
                 res.send(recordset)

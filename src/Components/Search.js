@@ -3,10 +3,6 @@ import React, { Component } from 'react';
 class Search extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //     id : this.props.userEditObject().ID,
-        //     name : this.props.userEditObject().Name,
-        // }
     }
     isChange = (e) => {
         const name = e.target.name;
@@ -28,7 +24,19 @@ class Search extends Component {
             )
         }
     }
+    isChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        this.setState({
+            [name] : value
+        });
+    }
+    clickSearch = (KeyWord) => {
+        this.props.search(KeyWord);
+        
+    }
     render() {
+        // console.log(this.state);
         // console.log(this.props.userEditObject().Row_Version);
         return (
             <div className="col-12">
@@ -40,7 +48,7 @@ class Search extends Component {
                                 <div className="card-body text-primary">
                                 <div className="form-group">
                                     <input type="text" className="form-control" name="name"  placeholder="User name" 
-                                        defaultValue={this.props.userEditObject().Name}
+                                        defaultValue={this.props.userEditObject().StudentName}
                                         onChange = {(e) => this.isChange(e)}
                                     />
                                 </div>
@@ -73,9 +81,12 @@ class Search extends Component {
                 </div>
                 <div className="form-group">
                 <div className="btn-group">
-                    <input type="text" className="form-control" placeholder="Nhập từ khóa" 
+                    <input type="text" className="form-control" placeholder="Nhập từ khóa" name="search"
+                        onChange={(e) => this.isChange(e)}
                     />
-                    <div className="btn btn-info">
+                    <div className="btn btn-info"
+                        onClick={(KeyWord) => this.clickSearch(this.state)}
+                    >
                     Tìm kiếm
                     </div>
                 </div>
@@ -84,7 +95,6 @@ class Search extends Component {
                         {
                             this.showButton()
                         }
-                        
                     </div>
                 </div>
                 <hr />

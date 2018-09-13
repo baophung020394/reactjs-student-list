@@ -13,7 +13,8 @@ class App extends Component {
       displayForm : true,
       student : '',
       userObj : '',
-      userEditObject : {}
+      userEditObject : {},
+      pageIndex : 1
     }
    
   }
@@ -25,16 +26,43 @@ class App extends Component {
       displayForm: !this.state.displayForm
     });
   }
+  // paginationClick = (i) => {
+  //   console.log('t click đc rồi' + i);
+  // }
   /**
    * Function fetch list student
    */
-  getStudent = () => {
-    fetch('http://172.16.12.30:4000/studies')
+  paginationClick = (i) => {
+   
+     fetch('http://172.16.12.30:4000/studies', {
+      method: 'POST',
+      headers: {  
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'pageIndex': i
+      })
+    }) 
     .then(recordset  => recordset.json())
     .then(recordset => this.setState({studies : recordset}))
    
   }
-
+ search = async (KeyWord) => {
+    // console.log(KeyWord);
+   await fetch('http://172.16.12.30:4000/studies', {
+      method: 'POST',
+      headers: {  
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'KeyWord': KeyWord['search']
+      })
+    }) 
+    .then(recordset  => recordset.json())
+    .then(recordset => this.setState({studies : recordset}))
+ }
   /**
    * Function Insert New User
    */
@@ -54,7 +82,7 @@ class App extends Component {
     .then(recordset => this.setState({userObj : recordset}))
     userInformation.name = '';
     if(this.state.userObj.recordset[0]['Message'] === "Insert student success") {
-      this.getStudent();
+      this.paginationClick();
     }else {
       alert (this.state.userObj.recordset[0]['Message']);
     }
@@ -78,7 +106,7 @@ class App extends Component {
     .then(recordset => this.setState({userObj : recordset}))
 
     if(this.state.userObj.recordset[0]['Message'] === "Delete student success") {
-      this.getStudent();
+      this.paginationClick();
     }else {
       alert (this.state.userObj.recordset[0]['Message']);
     }
@@ -95,7 +123,9 @@ class App extends Component {
     console.log(userInfo);
   }
   submitUpdateUser = async (userInfo) => {
+  
     if(userInfo !== null) {
+      console.log(userInfo);
       await fetch('http://172.16.12.30:4000/edituser', {
         method: 'POST',
         headers: {
@@ -111,7 +141,7 @@ class App extends Component {
       .then(recordset  => recordset.json())
       .then(recordset => this.setState({userEditObject : recordset}))
       if(this.state.userEditObject.recordset[0]['Message'] === "Update student success") {
-        this.getStudent();
+        this.paginationClick();
       }else {
         alert (this.state.userEditObject.recordset[0]['Message']);
       }
@@ -121,7 +151,7 @@ class App extends Component {
     
   }
   componentDidMount() {
-      this.getStudent();
+      this.paginationClick();
   }
 
   render() {
@@ -135,12 +165,14 @@ class App extends Component {
             <div className="container">
               <div className="row">
                 <Search 
+                  search={(KeyWord) => this.search(KeyWord)}
                   submitUpdateUser = {(userInfo) => this.submitUpdateUser(userInfo)}
                   editUser = {(userInfo) => this.editUser(userInfo)}
                   userEditObject = {() => this.state.userEditObject}
                   con={() => this.changeStateForm()} 
                   displayForm={this.state.displayForm}/>
                 <TableData 
+                  paginationClick = {(i) => this.paginationClick(i)}
                   editUser = {(userInfo) => this.editUser(userInfo)}
                   students={this.state.studies}
                   deleteUser={(userInformation) => this.deleteUser(userInformation)}
