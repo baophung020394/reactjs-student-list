@@ -91,7 +91,7 @@ class App extends Component {
    * Function Delete User
    */
   deleteUser = async (userId) => {
-    // console.log(userId);
+    console.log(userId);
     await fetch('http://172.16.12.30:4000/deleteuser', {
       method: 'POST',
       headers: {
@@ -123,9 +123,8 @@ class App extends Component {
     console.log(userInfo);
   }
   submitUpdateUser = async (userInfo) => {
-  
+  // console.log(userInfo);
     if(userInfo !== null) {
-      console.log(userInfo);
       await fetch('http://172.16.12.30:4000/edituser', {
         method: 'POST',
         headers: {

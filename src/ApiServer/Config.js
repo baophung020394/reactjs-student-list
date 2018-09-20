@@ -147,6 +147,9 @@ app.post('/edituser', function (req, res, next){
     var userId = req.body.userId;
     var userName = req.body.userName;
     var rowVersion = '0x' + Buffer(req.body.rowVersion.data).toString('hex');
+    console.log(userId);
+    console.log(userName);
+    console.log(rowVersion);
     sql.connect(config, function(err) {
         try{
             if(err) {
@@ -156,7 +159,7 @@ app.post('/edituser', function (req, res, next){
             var request = new sql.Request();
             request.input("Id", sql.Int, userId);
             request.input("Name", sql.NVarChar, userName);
-            console.log(userName);
+            // console.log(userName);
             request.input("RowVersion", sql.NVarChar, rowVersion);
             request.execute("UpdateStudent").then(function (recordset) {
                 res.send(recordset)

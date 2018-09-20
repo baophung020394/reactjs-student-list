@@ -1,7 +1,7 @@
 USE [Practise]
 GO
 
-/****** Object:  StoredProcedure [dbo].[UpdateStudent]    Script Date: 9/13/2018 5:26:48 PM ******/
+/****** Object:  StoredProcedure [dbo].[UpdateStudent]    Script Date: 9/20/2018 9:42:51 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,7 +11,7 @@ GO
 CREATE PROCEDURE [dbo].[UpdateStudent]
 	@Id Int,
 	@Name Nvarchar(255),
-	@RowVersion Nvarchar(50)
+	@RowVersion Nvarchar(255)
 As
 BEGIN TRY
 	BEGIN
@@ -21,10 +21,11 @@ BEGIN TRY
 		END
 		ELSE
 		BEGIN
-			IF EXISTS(SELECT * FROM Student WHERE Row_Version = CAST(@RowVersion AS timestamp)) 
+			IF EXISTS(SELECT * FROM Student WHERE Row_Version = CONVERT(VARBINARY(MAX),@RowVersion,1)) 
 				BEGIN
 					UPDATE Student SET Name = @Name WHERE ID = @Id
 					SELECT 'Update student success' As 'Message' 
+					
 				END
 			ELSE 
 				BEGIN

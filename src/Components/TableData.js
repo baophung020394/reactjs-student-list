@@ -57,7 +57,7 @@ class TableData extends Component {
                             <td>{value.RowNumber}</td>
                             <td>{value.ID}</td> 
                             <td>{value.StudentName}</td>
-                            <td>098899887722</td>
+                            <td>{value.Row_Version.data}</td>
                             <td>Moderator</td>
                             <td>
                                 <div className="btn-group">

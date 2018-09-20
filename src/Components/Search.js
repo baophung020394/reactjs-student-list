@@ -24,7 +24,7 @@ class Search extends Component {
             )
         }
     }
-    isChange = (e) => {
+    isChangeSearch = (e) => {
         const name = e.target.name;
         const value = e.target.value;
         this.setState({
@@ -82,7 +82,7 @@ class Search extends Component {
                 <div className="form-group">
                 <div className="btn-group">
                     <input type="text" className="form-control" placeholder="Nhập từ khóa" name="search"
-                        onChange={(e) => this.isChange(e)}
+                        onChange={(e) => this.isChangeSearch(e)}
                     />
                     <div className="btn btn-info"
                         onClick={(KeyWord) => this.clickSearch(this.state)}

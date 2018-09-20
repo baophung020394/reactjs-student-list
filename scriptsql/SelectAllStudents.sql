@@ -1,7 +1,7 @@
 USE [Practise]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SelectAllStudents]    Script Date: 9/13/2018 5:26:40 PM ******/
+/****** Object:  StoredProcedure [dbo].[SelectAllStudents]    Script Date: 9/20/2018 9:39:09 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -23,7 +23,8 @@ BEGIN
 		TotalItem INT,
 		PageSize INT, 
 		TotalPage INT,
-		PageIndex INT		
+		PageIndex INT,
+		Row_Version TIMESTAMP
 	)
 	INSERT INTO @Pagination(ID, RowNumber, StudentName, TotalItem, PageSize, TotalPage, PageIndex) 
 	SELECT	
@@ -41,10 +42,11 @@ BEGIN
 	WHERE Name LIKE '%' + @KeyWord + '%'
 	GROUP BY ID, Name
 
-	SELECT RowNumber,  ID, StudentName , MAX(TotalItem) AS TotalItem , MAX(TotalPage) AS TotalPage , MAX(PageSize) AS PageSize, MAX(PageIndex) AS PageIndex 
-	FROM @Pagination
+	SELECT  RowNumber, p.ID, StudentName , MAX(TotalItem) AS TotalItem , MAX(TotalPage) AS TotalPage , MAX(PageSize) AS PageSize, MAX(PageIndex) AS PageIndex, s.Row_Version
+	FROM @Pagination p
+	INNER JOIN Student s ON p.ID = s.ID
 	WHERE RowNumber > ((@PageIndex - 1) * PageSize) AND RowNumber <= (@PageIndex * PageSize)
-	GROUP BY  ID, StudentName, RowNumber
+	GROUP BY  p.ID, StudentName, RowNumber, s.Row_Version
 	ORDER BY RowNumber
 	--SELECT Name
 	--FROM Student

@@ -1,7 +1,7 @@
 USE [Practise]
 GO
 
-/****** Object:  StoredProcedure [dbo].[InsertNewStudent]    Script Date: 9/13/2018 5:26:25 PM ******/
+/****** Object:  StoredProcedure [dbo].[InsertNewStudent]    Script Date: 9/20/2018 9:43:03 AM ******/
 SET ANSI_NULLS ON
 GO
 
